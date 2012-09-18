@@ -8,11 +8,7 @@ $id =$_GET['a'];
 
 require('./db.php');
 $name = get_album_name($id);
-
-
-
-$photos = $db->prepare('SELECT * FROM `images` WHERE album_id=?');
-$photos->execute(array($id));
+$photos = get_photos($id);
 ?>
 
 <!-- Headline -->
