@@ -1,3 +1,9 @@
+<?php
+
+require_once("auth.php");
+
+
+?>
 <html>
 
 <body>
@@ -11,6 +17,7 @@ $db = new PDO("sqlite:../db/images.db");
 
 <table>
 <?php
+print $USER->username;
 
 $result = $db->query('SELECT * FROM albums');
 foreach($result as $row)
@@ -19,12 +26,22 @@ foreach($result as $row)
 	print "<td><a href=\"album.php?a=".$row['id']."\">".$row['name']."</a></td>";
 }
   ?>
+
   
 </table>
 
 <?php
 echo "<br>";
-echo phpversion();
+
+
 ?>
+<!-- Log out option -->
+<form class="controlbox" name="log out" id="logout" action="index.php" method="POST">
+  <input type="hidden" name="op" value="logout"/>
+  <input type="hidden" name="username"value="<?php echo $_SESSION["username"]; ?>" />
+  <p>You are logged in as <?php echo $_SESSION["username"]; ?></p>
+  <input type="submit" value="log out"/>
+</form>
+
 </body>
 </html>

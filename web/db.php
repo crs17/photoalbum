@@ -42,3 +42,48 @@ function get_photo($id){
 }
 
 ?>
+
+<!-- comments database -->
+
+<?php
+
+
+function connect_comment_db(){
+   $comment_file = "../db/comments.db";
+
+   $build = false;
+   if (!file_exists($comment_file)) {
+	$build = true; }
+   
+   $comment_db = new PDO("sqlite:" . $comment_file);
+   if ($build){
+      $comment_db->beginTransaction();
+      $create = "CREATE TABLE comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, photo_id INTEGER);";
+      $comment_db->exec($create);
+      $comment_db->commit();
+   }
+   return $comment_db;
+}
+
+function get_comment($photo_id){
+
+   $comment_db = connect_comment_db();
+
+   $comment = $comment_db->prepare('SELECT * FROM `comments` WHERE photo_id=?');
+   $comment->execute(array($photo_id));
+   return $comment->fetch(PDO::FETCH_ASSOC);
+}
+
+function set_comment($photo_id, $comment, $username){
+   $comment_db = connect_comment_db();
+   $stmt = $comment_db->prepare("INSERT INTO comments (username, comment, photo_id) VALUES (:username, :comment, :photo_id)");
+   $stmt->bindParam(':username', $username);
+   $stmt->bindParam(':comment', $comment);
+   $stmt->bindParam(':photo_id', $photo_id);
+
+   $stmt->execute();
+
+   return;
+}
+
+?>
