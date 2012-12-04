@@ -58,7 +58,7 @@ function connect_comment_db(){
    $comment_db = new PDO("sqlite:" . $comment_file);
    if ($build){
       $comment_db->beginTransaction();
-      $create = "CREATE TABLE comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, photo_id INTEGER);";
+      $create = "CREATE TABLE comments (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, comment TEXT, photo_id INTEGER, timestamp DATETIME);";
       $comment_db->exec($create);
       $comment_db->commit();
    }
@@ -76,7 +76,13 @@ function get_comment($photo_id){
 
 function set_comment($photo_id, $comment, $username){
    $comment_db = connect_comment_db();
-   $stmt = $comment_db->prepare("INSERT INTO comments (username, comment, photo_id) VALUES (:username, :comment, :photo_id)");
+   // delete old comment
+   $del_cmd = $comment_db->prepare("DELETE FROM comments WHERE photo_id=:photo_id");
+   $del_cmd->bindParam(':photo_id', $photo_id);
+   $del_cmd->execute();
+
+   // Insert new comment
+   $stmt = $comment_db->prepare("INSERT INTO comments (username, comment, photo_id, timestamp) VALUES (:username, :comment, :photo_id, DATETIME('NOW', 'localtime'));");
    $stmt->bindParam(':username', $username);
    $stmt->bindParam(':comment', $comment);
    $stmt->bindParam(':photo_id', $photo_id);

@@ -1,13 +1,9 @@
 <?php
-
-require_once("auth.php");
-
-
 $path = '../Usered';
 set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 
-  date_default_timezone_set("Europe/Copenhagen");
+  date_default_timezone_set("America/Vancouver");
 
 	$data = false;
 
@@ -43,17 +39,28 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 		<p class="error">Error: <?php echo $USER->error; ?></p>
 		<?php } ?>
 
+		<p>This page is a functional demonstrator, where you can test the various functions of the
+		user framework. On the left you can register new users, log in, update your email address
+		or password, log out, or request password resets.</p>
+
+		<p>On the right you can see information pertaining to you, as current user. When
+		registering or logging in it will show your session identifier and authentication status, POST
+		information received by the user system, as well as the system's information and error log
+		content. The code can be downloaded from <a href="http://github.com/Pomax/Usered">github</a>
+		or for those who just want a zip file, that's <a href="https://github.com/Pomax/Usered/zipball/master">also
+		available</a>.</p>
+
+
 		<table style="width: 100%; margin-top: 1em;"><tr><td style="width: 24em; padding-top:1em;">
-<?php		if($USER->authenticated) { ?>
+<?php		if(!$USER->authenticated) { ?>
 
 			<!-- Allow a new user to register -->
-			<form class="controlbox" name="new user registration" id="registration" action="user_admin.php" method="POST">
+			<form class="controlbox" name="new user registration" id="registration" action="index.php" method="POST">
 				<input type="hidden" name="op" value="register"/>
 				<input type="hidden" name="sha1" value=""/>
 				<table>
 					<tr><td>user name </td><td><input type="text" name="username" value="" /></td></tr>
 					<tr><td>email address </td><td><input type="text" name="email" value="" /></td></tr>
-					<tr><td>Role </td><td><input type="text" name="role" value="" /></td></tr>
 					<tr><td>password </td><td><input type="password" name="password1" value="" /></td></tr>
 					<tr><td>password (again) </td><td><input type="password" name="password2" value="" /></td></tr>
 				</table>
@@ -64,7 +71,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			if(!$USER->authenticated) { ?>
 
 			<!-- Allow a user to log in -->
-			<form class="controlbox" name="log in" id="login" action="user_admin.php" method="POST">
+			<form class="controlbox" name="log in" id="login" action="index.php" method="POST">
 				<input type="hidden" name="op" value="login"/>
 				<input type="hidden" name="sha1" value=""/>
 				<table>
@@ -78,7 +85,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			if(!$USER->authenticated) { ?>
 
 			<!-- Request a new password from the system -->
-			<form class="controlbox" name="forgotten passwords" id="reset" action="user_admin.php" method="POST">
+			<form class="controlbox" name="forgotten passwords" id="reset" action="index.php" method="POST">
 				<input type="hidden" name="op" value="reset"/>
 				<table>
 					<tr><td>email address </td><td><input type="text" name="email" value="<?php $USER->email; ?>" /></td></tr>
@@ -90,7 +97,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			if($USER->authenticated) { ?>
 
 			<!-- Log out option -->
-			<form class="controlbox" name="log out" id="logout" action="user_admin.php" method="POST">
+			<form class="controlbox" name="log out" id="logout" action="index.php" method="POST">
 				<input type="hidden" name="op" value="logout"/>
 				<input type="hidden" name="username"value="<?php echo $_SESSION["username"]; ?>" />
 				<p>You are logged in as <?php echo $_SESSION["username"]; ?></p>
@@ -101,7 +108,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			if($USER->authenticated) { ?>
 
 			<!-- If a user is logged in, her or she can modify their email and password -->
-			<form class="controlbox" name="update" id="update" action="user_admin.php" method="POST">
+			<form class="controlbox" name="update" id="update" action="index.php" method="POST">
 				<input type="hidden" name="op" value="update"/>
 				<input type="hidden" name="sha1" value=""/>
 				<p>Update your email address and/or password here</p>
@@ -117,7 +124,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 			if($USER->authenticated) { ?>
 
 			<!-- If a user is logged in, they can elect to unregister -->
-			<form class="controlbox" name="unregister" id="unregister" action="user_admin.php" method="POST">
+			<form class="controlbox" name="unregister" id="unregister" action="index.php" method="POST">
 				<input type="hidden" name="op" value="unregister"/>
 				<input type="hidden" name="username"value="<?php echo $_SESSION["username"]; ?>" />
 				<p>To unregister, press the button...</p>

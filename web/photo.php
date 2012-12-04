@@ -10,11 +10,8 @@ $pid =$_GET['p'];
 
 require('./db.php');
 
-if (array_key_exists("comment", $_POST))
-{
-   print $_POST["comment"];
+if (array_key_exists("comment", $_POST)){
    set_comment($pid, $_POST["comment"], $USER->username);
-   
 }
 
 
@@ -59,14 +56,16 @@ $photo_ids = get_photo_ids($aid);
       <!--  Editable, if superuser -->
       <?php
 	$comment = get_comment($pid); 
-	if ($USER->role==="superuser"){}?>
+        if (count($comment)>1){
+           print "$comment[username] ($comment[timestamp]):<br>";}
+        if ($USER->role==="superuser"){ ?>
          <form name="update_comment" method="POST">
-         <textarea name="comment"><?php print $comment[comment];?> </textarea>
+         <textarea name="comment" cols="100"><?php print $comment[comment];?> </textarea>
          <br><br>
-	   <input type="submit" value="Submit">
+	   <input type="submit" value="Opdater">
          </form>
        <!--  Otherwise just display comments-->
-      <?php} else{  print $comment[comment];}?>
+      <?php } else{  print $comment[comment];}?>
 
       <!-- Links -->
       <br><a href=<?php print "album?a=$aid"?>>Tilbage til album</a>

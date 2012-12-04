@@ -38,6 +38,7 @@ db.execute('''CREATE TABLE IF NOT EXISTS images
 path text,
 thumb_path text,
 album_id INTEGER,
+timestamp DATETIME,
 FOREIGN KEY(album_id) REFERENCES albums(id))''')
 
 # prepare the target dir
