@@ -18,7 +18,7 @@ User = {
 	 */
 	markInvalid: function(input, reason) {
 		var classes = "";
-		if(input.class) { classes = input.getAttribute("class"); }
+		if(input.getAttribute("class")) { classes = input.getAttribute("class"); }
 		input.setAttribute("class", classes + " error");
 		input.title = reason;
 		return false; },
@@ -39,7 +39,7 @@ User = {
 	validName: function(input)
 	{
 		var username = input.value;
-		if(username.trim()=="") { return this.markInvalid(input, "You forgot your user name."); }
+		if(username=="") { return this.markInvalid(input, "You forgot your user name."); }
 		if(username.indexOf("'")>-1) { return this.markInvalid(input, "Apostrophes are not allowed in user names."); }
 		if(username.length<4) { return this.markInvalid(input, "Sorry, user names must be more than 3 letters."); }
 		return this.markValid(input);
@@ -72,7 +72,7 @@ User = {
 	validPassword: function(input)
 	{
 		var password = input.value;
-		if(password.trim()=="") { return this.markInvalid(input, "You need to fill in a password"); }
+		if(password=="") { return this.markInvalid(input, "You need to fill in a password"); }
 		return this.markValid(input);
 	},
 
@@ -188,34 +188,4 @@ User = {
           tag[property] = properties[property]; }}
       return tag; },
 
-  /**
-   * Inject a generic login form into the element passed as "parent"
-   */
-  injectLogin: function(parent) {
-    // eliminate the need to type "this." everywhere in the function
-    var add = this.add;
-    var make = this.make;
-
-    var form = this.make("form", {id: "usered_login_form", action: ".", method: "POST"});
-    add(form, make("label", {for: "usered_username", innerHTML: "user name"}));
-    add(form, make("input", {id: "usered_username", type: "text"}));
-    add(form, make("label", {for: "usered_password", innerHTML: "password"}));
-    add(form, make("input", {id: "usered_password", type: "password"}));
-    add(form, make("input", {id: "usered_login_button", type: "submit", value: "log in"}));
-    add(parent, form);
-  },
-
-  /**
-   * Inject a generic logout form into the element passed as "parent"
-   */
-  injectLogout: function(parent) {
-    // eliminate the need to type "this." everywhere in the function
-    var add = this.add;
-    var make = this.make;
-
-    var form = make("form", {id: "usered_logout_form", action: ".", method: "POST"});
-    add(form, make("input", {type: "hidden", name: "op", value: "logout"}));
-    add(form, make("input", {id: "usered_logout_button", type: "submit", value: "log out"}));
-    add(parent, form)
-  }
 };

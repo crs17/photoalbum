@@ -8,20 +8,29 @@ $USER = new User();
 $target = $_SERVER['REQUEST_URI'];
 
 if (!$USER->authenticated) {?>
-<title>Please log in</title>
-<meta charset="utf-8"/>
-<script type="text/javascript" src="js/sha1.js"></script>
-<script type="text/javascript" src="js/user.js"></script>
-<link rel="stylesheet" type="text/css" href="style.css"></link>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <title>Please log in</title>
 
-<form class="controlbox" name="log in" id="login" action=<?php print "$target"?> method="POST">
-      <input type="hidden" name="op" value="login"/>
-      <input type="hidden" name="sha1" value=""/>
-      <table>
-          <tr><td>user name </td><td><input type="text" name="username" value="" /></td></tr>
-          <tr><td>password </td><td><input type="password" name="password1" value="" /></td></tr>
-      </table>
-      <input type="button" value="log in" onclick="User.processLogin()"/>
-</form>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/style.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="/js/sha1.js"></script>
+    <script type="text/javascript" src="/js/user.js"></script>
+  </head>
+  <body>
+    <img id="login-image" src="static_images/vagthund.JPG" alt="Vagthund">
+    <form class="form-inline" name="log in" id="login" action='<?php print "$target"?>' method="POST">
+      <input type="hidden" name="op" value="login">
+      <input type="hidden" name="sha1" value="">
+      
+      <input type="text" class="input-small" placeholder="Brugernavn" name="username">
+      <input type="password" class="input-small" placeholder="Kodeord" name="password1">
+      <input type="submit" class="btn btn-success" value="log ind" onclick="User.processLogin()">
+    </form>
+  </body>
+ </html>
+
    
 <?php  exit(); } ?>

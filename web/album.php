@@ -5,8 +5,11 @@ require_once("auth.php");
 
 <html>
 <head>
-</head>
-<body>
+  <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+  <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+  </head>
+<body id="album_page">
 <!-- Get the album info -->
 <?php
 $id =$_GET['a'];
@@ -24,7 +27,7 @@ $photos = get_photos($id);
 foreach ($photos as $photo) 
 {
 	echo "<a href=photo.php?a=$id&p=$photo[id]>";
-	echo "<img src='./images/$photo[thumb_path]'>";
+	echo "<img src='./images/$photo[thumb_path]' class='img-polaroid'>";
 	echo "</a>";
 }
 ?>
