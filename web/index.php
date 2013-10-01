@@ -4,7 +4,8 @@
 <html>
 <head>
   <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-  <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+  <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 </head>
 <body>
 
@@ -26,41 +27,54 @@ if (array_key_exists("album_comment", $_POST)){
 <?php
 $result = get_albums();
 
-
 $timezone = new DateTimeZone('Europe/Copenhagen');
 
-foreach($result as $row)
+for ($i = 0; $i < count($result); ++$i)
   {
     # Find the time span of the photos in the album
-    $oldest = DateTime::createFromFormat ('Y' , '1000', $timezone);
-    $newest = DateTime::createFromFormat ('Y' , '3000', $timezone);
+    $oldest = DateTime::createFromFormat ('Y' , '3000', $timezone);
+    $newest = DateTime::createFromFormat ('Y' , '1000', $timezone);
 
-    $photos = get_photos("$row[id]");
-    foreach($photos as $photo)
+    $aphotos = get_photos($result[$i]['id']);
+    foreach($aphotos as $photo)
       {
-	$ts = DateTime::createFromFormat('Y:m:d G:i:s', $photo[timestamp], $timezone);
+	$ts = DateTime::createFromFormat('Y:m:d G:i:s', $photo['timestamp'], $timezone);
 	
-	if ($ts < $newest)
+	if ($ts > $newest)
 	  {$newest = $ts;}
-	if ($ts > $oldest)
+	if ($ts < $oldest)
 	  {$oldest = $ts;}
       }
 
-    $newest_day = $newest->format('Y/m/d');
-    $oldest_day = $oldest->format('Y/m/d');
+    $result[$i]["newest"] = $newest->format('Y/m/d');
+    $result[$i]["oldest"] = $oldest->format('Y/m/d');
+    $result[$i]["number"] = count($aphotos);;
+  }
 
-    $album_date = $newest_day;
-    if ($newest_day != $oldest_day)
-      {$album_date = $oldest_day." - ".$newest_day;}
 
+
+function albumsort($a, $b)
+{
+  return strtotime($a["oldest"]) > strtotime($b["oldest"]);
+}
+
+usort($result, "albumsort");
+
+
+foreach($result as $row)
+  {
+
+    $album_date = $row["newest"];
+    if ($row["newest"] != $row["oldest"])
+      {$album_date = $row["oldest"]." - ".$row["newest"];}
 
     $frontpic = get_photo(get_frontpage_pid($row['id']));
 
-    print "<tr><td>  <a href=\"album.php?a=".$row['id']."\">";
-    print "<img src='./images/$frontpic[thumb_path]' width='150px'>";
-    print $row['name']."</a></td>";
+    print "<tr><td class='td_frontpage'>  <a href=\"album.php?a=".$row['id']."\">";
+    print "<img src=\"./images/$frontpic[thumb_path]\" width='150px'>";
+    print "<b>".$row['name']." (".$row["number"]." billeder)</b></a></td>";
 
-    print "<td>";
+    print "<td class='td_frontpage'>";
 
     $album_comment = get_album_comment($row['id']); 
     if ($USER->role==="superuser"){ ?>
@@ -76,7 +90,7 @@ foreach($result as $row)
 
 
 
-    print "</td><td>$album_date</td></tr>\n";
+    print "</td><td class='td_frontpage'>$album_date</td></tr>\n";
   }
 ?>
   </tbody>
@@ -84,7 +98,7 @@ foreach($result as $row)
 
 <br>
 <!-- Log out option -->
-<form class="controlbox" name="log out" id="logout" action="index.php" method="POST">
+<form name="log out" id="logout" action="index.php" method="POST">
   <input type="hidden" name="op" value="logout"/>
   <input type="hidden" name="username" value="<?php echo $_SESSION["username"]; ?>" />
   <p>Du er logget ind som <?php echo $_SESSION["username"]; ?>

@@ -20,28 +20,29 @@ if (array_key_exists("frontpic", $_POST)){
 
 $photo = get_photo($pid);
 $photo_ids = get_photo_ids($aid);
-
+$album_name = get_album_name($aid)
 ?>
-
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    <title><?php print $album_name?></title>
   </head>
   
   <body class="photo_page">
     <div id='photo'>
       <!-- Image -->
-      <?php print "<img src='./images/$photo[path]' id='big_photo'>"; ?>
-
+      <?php print "<img src=\"./images/$photo[path]\"  class='big_photo'>";?>
+    </div>
+    <div id='navigation'>
       <!-- Navigation -->
       <p>
       <table width="800px">
 	<tr><td>
 	    <?php
 	       if ($photo_ids[0] != $pid){
-	       $last = $pid - 1;
+		 $last = $photo_ids[array_search($pid, $photo_ids) - 1];
 	       print "<a href='photo.php?a=$aid&p=$last'>Tilbage</a>";
 	       }
 	       ?>
@@ -49,7 +50,7 @@ $photo_ids = get_photo_ids($aid);
 	  <td align="right">
 	    <?php
 	       if (end($photo_ids) != $pid){
-	       $next = $pid + 1;
+		 $next = $photo_ids[array_search($pid, $photo_ids) + 1];
 	       print "<a href='photo.php?a=$aid&p=$next'>Frem</a>";
 	       }
 	       ?>
@@ -65,7 +66,7 @@ $photo_ids = get_photo_ids($aid);
         if ($USER->role==="superuser"){ ?>
 	  <p>
 	  <form name="update_comment" class="form-inline" method="POST">
-	     <textarea name="comment" row="3"><?php print $comment['comment'];?></textarea><br>
+	     <textarea name="comment" row="5" cols="70"><?php print $comment['comment'];?></textarea><br>
 	  <label class="checkbox">
 	  <input type="checkbox" name="frontpic" value=<?php
 	  print "$pid";
@@ -74,7 +75,7 @@ $photo_ids = get_photo_ids($aid);
 	    {print ' checked';}
 	  ?>> Forside billede
 	  </label>
-	  <input type="submit" value="Opdater" class="btn btn-info">
+	  <input type="submit" value="Opdater" class="btn btn-info photo_page">
 	  </form>
 	  </p>
        <!--  Otherwise just display comments-->

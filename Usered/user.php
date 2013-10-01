@@ -529,7 +529,7 @@ EOT;
 				$this->update_user_token($username, $sha1);
 				// make the user's data directory
 				$dir = User::USER_HOME . $username;
-				if(!mkdir($dir, 0600)) { $this->error("could not make user directory $dir"); return false; }
+				//if(!mkdir($dir, 0600)) { $this->error("could not make user directory $dir"); return false; }
 				$this->info("created user directory $dir");
 				// if there is a callback, call it
 				if($registration_callback !== false) { $registration_callback($username, $email, $dir); }

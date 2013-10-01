@@ -36,7 +36,9 @@ row { display: block; }
 div, table, tr, td { margin: 0px; padding: 0px; }
 td { vertical-align: top; }
 
-input[type=button], input[type=submit] { position: relative; float: right; top: -1.7em; }
+td.td_frontpage { vertical-align: middle; }
+
+input[type=button].photo_page, input[type=submit].photo_page { position: relative; float: right; top: -1.7em; }
 
 .notice { font-style: italic; font-variant: small-caps; }
 
@@ -48,12 +50,50 @@ a { text-decoration: none; }
 #album_page {background-color:black;
 	    color: white;}
 
-#big_photo {padding-top:10px;
-	   padding-bottom:10px;}
+.big_photo {padding-top:10px;
+	   padding-bottom:10px;
+	   height: 533px;
+	   align: center;
+}
+
+#rotate_left {
+    -ms-transform:rotate(-90deg); /* IE 9 */
+    -moz-transform:rotate(-90deg); /* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari and Chrome */
+    -o-transform:rotate(-90deg); /* Opera */
+    transform:rotate(-90deg);
+
+    -ms-transform:translate(0,20px); /* IE 9 */
+    -moz-transform:translate(0,20px); /* Firefox */
+    -webkit-transform:translate(0,20px); /* Safari and Chrome */
+    -o-transform:translate(0,20px); /* Opera */
+    transform:translate(0,20px);
+
+    width: 533px;
+    height: 355px;
+}
+
+#rotate_right {
+    -ms-transform:rotate(90deg); /* IE 9 */
+    -moz-transform:rotate(90deg); /* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari and Chrome */
+    -o-transform:rotate(90deg); /* Opera */
+    transform:rotate(90deg);
+    width: 533px;
+    height: 355px;
+}
 
 p.comment-usertag {margin-bottom:20px;}
 
 #photo {
     width: 800px;
     margin: 0px auto;
+    align: center;
+    height: 553px;
+}
+
+#navigation {
+    width: 800px;
+    margin: 0px auto;
+    align: center;
 }

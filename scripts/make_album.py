@@ -89,10 +89,11 @@ def get_exif(fn):
     def extract(key):
         values = [l[l.find('|') + 1:-1].strip() 
                   for l in result.split('\n') if l.startswith(key)]
+        print key, values
         if values:
             return values[0]
    
-    keys = ['Model', 'Orientation', 'Date and Time', 'Exposure Time', 'FNumber',
+    keys = ['Model', 'Orientation', 'Date and Time (ori', 'Exposure Time', 'FNumber',
             'ISO Speed Ratings', 'Aperture', 'Flash', 'Shutter speed', 'Focal Length']
 
     values = [extract(key) for key in keys]
@@ -103,6 +104,7 @@ def get_exif(fn):
 
 # connect to the DB
 connection = sqlite3.connect(image_db)
+connection.text_factory = str
 db = connection.cursor()
 
 # Make tables, if not already there
@@ -130,8 +132,10 @@ FOREIGN KEY(album_id) REFERENCES albums(id))''')
 # prepare the target dir
 target_dir = target_dir_template % name
 if os.path.exists(target_dir):
-    raise Exception('Target dir already exists')
-os.mkdir(target_dir)
+    # raise Exception('Target dir already exists')
+    print 'Target dir already exists'
+else:
+    os.mkdir(target_dir)
 
 # Store the album name
 db.execute('SELECT id FROM albums WHERE name = ?', (name, ))
@@ -149,7 +153,7 @@ files = os.listdir(folder)
 images = [f for f in files if os.path.splitext(f)[1] in image_formats]
 
 
-images = images[0:4]
+#images = images[0:4]
 
 # convert all images
 for image in images:
@@ -158,11 +162,11 @@ for image in images:
     trg_fn = os.path.join(target_dir, image)
     thumb_trg_fn = os.path.join(target_dir, 'thumb' + image)
     # convert normal image
-    cmd = 'convert -resize %d \"%s\" \"%s\"' %(size, src_fn, trg_fn)
+    cmd = 'convert -auto-orient -resize %d \"%s\" \"%s\"' %(size, src_fn, trg_fn)
     os.system(cmd)
     # convert thumbnail image
-    cmd = 'convert -resize %d \"%s\" \"%s\"' %(thumb_size, src_fn,
-                                                thumb_trg_fn)
+    cmd = 'convert -auto-orient -resize %d \"%s\" \"%s\"' %(thumb_size, src_fn,
+                                                            thumb_trg_fn)
     os.system(cmd)
     
     info = get_exif(trg_fn)
@@ -173,7 +177,7 @@ for image in images:
         (trg_fn,
          thumb_trg_fn,
          album_id,
-         info['Date and Time'],
+         info['Date and Time (ori'],
          info['Model'],
          info['Orientation'],
          info['Exposure Time'],

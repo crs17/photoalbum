@@ -1,14 +1,14 @@
 <?php
 
 $db = new PDO("sqlite:../db/images.db");
-
+$db->query('SET NAMES "utf8"'); 
 
 $albums = $db->prepare('SELECT * FROM `albums` ORDER BY `id`');
 
 function get_albums(){
    global $db, $albums;
    $albums->execute();
-   return $albums;
+   return $albums->fetchAll();
 }
 
 
@@ -26,16 +26,16 @@ function get_album_name($id){
 
 
 
-$photos = $db->prepare('SELECT * FROM `images` WHERE album_id=? ORDER BY `id`');
+$photos = $db->prepare('SELECT * FROM `images` WHERE album_id=? ORDER BY `timestamp`');
 
 function get_photos($id){
    global $db, $photos;
    $photos->execute(array($id));
-   return $photos;
+   return $photos->fetchAll();
 }
 
 
-$photo_ids = $db->prepare('SELECT `id` FROM `images` WHERE album_id=? ORDER BY `id`');
+$photo_ids = $db->prepare('SELECT `id` FROM `images` WHERE album_id=? ORDER BY `timestamp`');
 
 function get_photo_ids($id){
    global $db, $photo_ids;
